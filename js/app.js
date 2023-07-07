@@ -165,7 +165,7 @@ function cotizarSeguro(e) {
 
     // Instanciar seguro
     const seguro = new Seguro(marca, year, tipo);
-    const total = seguro.cotizarSeguro();
+    const total = seguro.cotizarSeguro().toFixed(2);
 
     // Prototype para mostrar en la ui la cotización final
     ui.mostrarResultado(total, seguro);
