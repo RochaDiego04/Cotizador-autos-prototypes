@@ -71,10 +71,6 @@ UI.prototype.mostrarAlerta = (mensaje, tipo) => { // Podemos usar function o arr
 
     div.classList.add('mensaje','mt-10');
     div.textContent = mensaje;
-    
-    // Deshabilitar el botón hasta que termine la alerta
-    const cotizarBtn = document.querySelector('#cotizar-btn');
-    cotizarBtn.disabled = true;
 
     // Agregar al HTML
     const formulario = document.querySelector('#cotizar-seguro');
@@ -82,22 +78,36 @@ UI.prototype.mostrarAlerta = (mensaje, tipo) => { // Podemos usar function o arr
 
     setTimeout(() => {
         div.remove();
-        // Habilitar el boton de nuevo
-        cotizarBtn.disabled = false;
     }, 2000);
 
 }
 
 UI.prototype.mostrarResultado = (total, seguro) => {
     const resultadoDiv = document.querySelector("#resultado");
+    
+    const {marca, year, tipo} = seguro;
+    let textoMarca;
+    switch(marca){
+        case '1': textoMarca = 'Americano'; break;
+        case '2': textoMarca = 'Asiatico'; break;
+        case '3': textoMarca = 'Europeo'; break;
+        default: break;
+    }
+
     // Crear el resultado
     const div = document.createElement('DIV');
     div.classList.add('mt-10');
 
     div.innerHTML = `
         <p class="header">Tu Resumen</p>
+        <p class="font-bold">Marca: <span class="font-normal">${textoMarca}</span></p>
+        <p class="font-bold">Año: <span class="font-normal">${year}</span></p>
+        <p class="font-bold">Tipo: <span class="font-normal capitalize">${tipo}</span></p>
         <p class="font-bold">Total: <span class="font-normal">$${total}</span></p>
     `
+    // Deshabilitar el botón hasta que termine la cotizacion
+    const cotizarBtn = document.querySelector('#cotizar-btn');
+    cotizarBtn.disabled = true;
 
     const spinner = document.querySelector('#cargando');
     spinner.style.display = 'block';
@@ -105,6 +115,9 @@ UI.prototype.mostrarResultado = (total, seguro) => {
     setTimeout(() => {
         spinner.style.display = 'none';
         resultadoDiv.appendChild(div);
+        
+        // Habilitar el boton de nuevo
+        cotizarBtn.disabled = false;
     }, 2000);
 }
 
