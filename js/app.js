@@ -5,6 +5,45 @@ function Seguro(marca, year, tipo) {
     this.year = year;
     this.tipo = tipo;
 }
+
+// Realizar cotización con los datos
+Seguro.prototype.cotizarSeguro = function() { // Debemos acceder a los datos del objeto, arrow function no es opción
+    let cantidad;
+    const base = 2000;
+    
+    switch (this.marca){
+        case "1": 
+            cantidad = base * 1.15;
+            break;
+        case "2":
+            cantidad = base * 1.05;
+            break;
+        case "3":
+            cantidad = base * 1.35;
+            break;
+        default:
+            break;
+    }
+
+    // Leer el año. Cada año mas viejo, reduce el costo 3%
+    const diferencia = new Date().getFullYear() - this.year;
+    const descuento = diferencia * 0.03;
+    cantidad -= (cantidad * descuento);
+
+    /*
+        Básico = 30% extra
+        Completo = 50% extra
+    */
+   if(this.tipo === 'basico'){
+        cantidad *= 1.3
+   }
+   else {
+        cantidad *= 1.5
+   }
+
+   return cantidad
+}
+
 function UI() { }
 
 UI.prototype.llenarOpciones = () => {
@@ -43,6 +82,7 @@ UI.prototype.mostrarAlerta = (mensaje, tipo) => { // Podemos usar function o arr
 
 }
 
+
 // Instanciar objetos
 const ui = new UI();
 
@@ -74,4 +114,10 @@ function cotizarSeguro(e) {
     }
     ui.mostrarAlerta("Cotizando...","exito");
 
+    // Instanciar seguro
+    const seguro = new Seguro(marca, year, tipo);
+    const total = seguro.cotizarSeguro();
+
+    // Prototype para la ui y la cotización final
+    // ui.mostrarResultado(total, seguro);
 }
