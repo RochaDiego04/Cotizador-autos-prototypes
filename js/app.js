@@ -71,6 +71,10 @@ UI.prototype.mostrarAlerta = (mensaje, tipo) => { // Podemos usar function o arr
 
     div.classList.add('mensaje','mt-10');
     div.textContent = mensaje;
+    
+    // Deshabilitar el botón hasta que termine la alerta
+    const cotizarBtn = document.querySelector('#cotizar-btn');
+    cotizarBtn.disabled = true;
 
     // Agregar al HTML
     const formulario = document.querySelector('#cotizar-seguro');
@@ -78,6 +82,8 @@ UI.prototype.mostrarAlerta = (mensaje, tipo) => { // Podemos usar function o arr
 
     setTimeout(() => {
         div.remove();
+        // Habilitar el boton de nuevo
+        cotizarBtn.disabled = false;
     }, 2000);
 
 }
@@ -109,7 +115,7 @@ UI.prototype.alertsDelete = function() {
     errorElements.forEach(function(element) {
         element.remove();
     });
-    
+
     const correctoElements = formulario.querySelectorAll('.correcto.mensaje.mt-10');
     correctoElements.forEach(function(element) {
         element.remove();
@@ -144,6 +150,7 @@ function cotizarSeguro(e) {
     // Ocultar alertas previas
     ui.alertsDelete();
 
+    // Mostrar alertas
     if(marca === '' || year === '' || tipo === '') {
         ui.mostrarAlerta("Todos los campos son obligatorios","error");
         return
