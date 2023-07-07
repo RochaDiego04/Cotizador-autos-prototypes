@@ -78,10 +78,43 @@ UI.prototype.mostrarAlerta = (mensaje, tipo) => { // Podemos usar function o arr
 
     setTimeout(() => {
         div.remove();
-    }, 3000);
+    }, 2000);
 
 }
 
+UI.prototype.mostrarResultado = (total, seguro) => {
+    const resultadoDiv = document.querySelector("#resultado");
+    // Crear el resultado
+    const div = document.createElement('DIV');
+    div.classList.add('mt-10');
+
+    div.innerHTML = `
+        <p class="header">Tu Resumen</p>
+        <p class="font-bold">Total: <span class="font-normal">$${total}</span></p>
+    `
+
+    const spinner = document.querySelector('#cargando');
+    spinner.style.display = 'block';
+
+    setTimeout(() => {
+        spinner.style.display = 'none';
+        resultadoDiv.appendChild(div);
+    }, 2000);
+}
+
+UI.prototype.alertsDelete = function() {
+    const formulario = document.querySelector('#cotizar-seguro');
+
+    const errorElements = formulario.querySelectorAll('.error.mensaje.mt-10');
+    errorElements.forEach(function(element) {
+        element.remove();
+    });
+    
+    const correctoElements = formulario.querySelectorAll('.correcto.mensaje.mt-10');
+    correctoElements.forEach(function(element) {
+        element.remove();
+    });
+};
 
 // Instanciar objetos
 const ui = new UI();
@@ -108,16 +141,25 @@ function cotizarSeguro(e) {
     // Leer cobertura seleccionada
     const tipo = document.querySelector('input[name = "tipo"]:checked').value;
     
+    // Ocultar alertas previas
+    ui.alertsDelete();
+
     if(marca === '' || year === '' || tipo === '') {
         ui.mostrarAlerta("Todos los campos son obligatorios","error");
         return
     }
     ui.mostrarAlerta("Cotizando...","exito");
 
+    // Ocultar cotizaciones previas
+    const resultados = document.querySelector('#resultado div');
+    if(resultados != null) {
+        resultados.remove();
+    }
+
     // Instanciar seguro
     const seguro = new Seguro(marca, year, tipo);
     const total = seguro.cotizarSeguro();
 
-    // Prototype para la ui y la cotización final
-    // ui.mostrarResultado(total, seguro);
+    // Prototype para mostrar en la ui la cotización final
+    ui.mostrarResultado(total, seguro);
 }
